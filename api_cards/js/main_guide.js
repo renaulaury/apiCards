@@ -142,17 +142,6 @@ async function actionDraw() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 /*************** appel ini lancement de l appli ***************/
 actionReset();
 

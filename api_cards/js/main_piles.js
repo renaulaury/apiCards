@@ -110,21 +110,39 @@ async function actionReset() {
 }
 
 
+
+/******************* Mise en place des piles **********************/
+
+
 //element html utiles pour les event et pour la manip du dom
 const  cardsContainer = document.getElementById("cards-container");
 
+//fonction créer une pile
+function createContainPile(suit) {
+    const pileHtmlElement = document.createElement("div");
+    pileHtmlElement.classList.add(suit);
+    cardsContainer.append(pileHtmlElement);
+    return pileHtmlElement;
+}
 
-//add card dans le dom (zone des cartes piochées) selon uri de son image
-function addCardToDomByImgUri(imgUri) {
-
+// Fonction pour ajouter une carte à la pile correspondante
+function addCardToDomBySuit(suit, imgUri, code) {
     //creation element html 'img' class css "card" et attribut html "src" : l uri sera recue en argument
     const imgCardHtmlElement = document.createElement("img");
-    imgCardHtmlElement.classList.add("card");
-    imgCardHtmlElement.src =imgUri;
+    imgCardHtmlElement.classList.add(code);    
+    imgCardHtmlElement.src = imgUri;
 
-    //add image dans la zone des cartes piochées (en derniere position)
-    cardsContainer.append(imgCardHtmlElement);
+
+    // Si la div n'existe pas encore, on la crée
+    if (!pileHtmlElement) {
+        pileHtmlElement = createContainPile(suit);
+    }
+
+    // Ajout de l'image dans la pile correspondante
+    pileHtmlElement.append(imgCardHtmlElement);
 }
+
+ 
 
 
 //fonction qui dde a piocher une carte puis qui fait appel pour l integrer dans le dom
@@ -134,37 +152,20 @@ async function actionDraw() {
     const drawCardResponse = await drawCard();
 
     //recup uri de l img de cette carte dans les données recues
-    const imgCardUri = drawCardResponse.cards[0].image;
+    const imgUri = drawCardResponse.cards[0].image;
 
-    //ajout de la carte piochée dans la zone des cartes piochées
-    addCardToDomByImgUri(imgCardUri);
-}
+    // Le suit de la carte tirée
+    const suit = drawCardResponse.cards[0].suit; 
 
-/******************* Mise en place des piles **********************/
-
-//init paquets
-let diamonds = [];
-let hearts = [];
-let clover = [];
-let spade = [];
-
-//fonction qui tri par catégorie
-
-function sortBySuit() {
-    const 
+    // Ajout de la carte à la bonne pile
+    addCardToDomBySuit(suit, imgUri);
 }
 
 
 
-
-
-
-
-
-
-
-
-
+/*je crée une div qui a pour class le suit soit 4 au total -> createContainPile */
+/*je pioche (actionDraw), si le suit de la carte a une div avec le meme suit alors elle est ajoutée a la pile -> (addCardToDomBySuit)*/
+/*sinon création d'une div avec son suit puis ajout a cette pile*/
 
 
 
