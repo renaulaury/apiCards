@@ -3,18 +3,27 @@ async function callApi(uri) {
     console.log("-- callAPI - start --");
     console.log("uri = ", uri)
 
+    try {
     //fetch(), appel a l api et reception de la reponse
     const response = await fetch(uri);
     console.log("response = ", response);
 
-    //Récupération des données JSON recues de l api
-    const data = await response.json();
-    console.log("date = ", data);
+        if (response.ok) { //pour confirmer que le statut HTTP est dans la plage de succès (200-299)
 
-    console.log("-- callAPI - end --");
+            //Récupération des données JSON recues de l api
+            const data = await response.json();
+            console.log("data = ", data);
 
-    //renvoi des données
-    return data;
+            console.log("-- callAPI - end --");
+
+            //renvoi des données
+            return data;
+        } else {
+            alert("Impossible de récupérer les données. Veuillez réessayer plus tard.");
+        }
+    } catch (error) {
+        alert("Impossible de récupérer les données. Veuillez réessayer plus tard.");
+    }
 }
 
 /*************** Demande d'un nouveau deck ***************/
