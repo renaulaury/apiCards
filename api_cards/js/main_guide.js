@@ -1,3 +1,16 @@
+/*************** Ecoutes d'event et leur déclenchement ***************/
+
+//element html utiles pour les events et manip du dom
+const actionResetButton = document.getElementById("action-reset");
+const actionDrawButton = document.getElementById("action-draw");
+
+//Ecoutes d'event sur les boutons
+actionResetButton.addEventListener("click", actionReset);
+actionDrawButton.addEventListener("click", actionDraw);
+
+
+
+
 // fonction qui fait le fetch() et contacte l api
 async function callApi(uri) {
     console.log("-- callAPI - start --");
@@ -19,10 +32,12 @@ async function callApi(uri) {
             //renvoi des données
             return data;
         } else {
+            console.error(`Erreur HTTP : ${response.status} - ${response.statusText}`); //description de l echec ex : 404
             alert("Impossible de récupérer les données. Veuillez réessayer plus tard.");
         }
     } catch (error) {
-        alert("Impossible de récupérer les données. Veuillez réessayer plus tard.");
+        console.error("Erreur lors de l'appel API : ", error.message); // description de l error capturée 
+        alert(`Impossible de récupérer les données. Erreur actuelle : ${error.message}.`);
     }
 }
 
@@ -125,16 +140,20 @@ async function actionDraw() {
     addCardToDomByImgUri(imgCardUri);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*************** appel ini lancement de l appli ***************/
 actionReset();
 
 
-/*************** Ecoutes d'event et leur déclenchement ***************/
-
-//element html utiles pour les events et manip du dom
-const actionResetButton = document.getElementById("action-reset");
-const actionDrawButton = document.getElementById("action-draw");
-
-//Ecoutes d'event sur les boutons
-actionResetButton.addEventListener("click", actionReset);
-actionDrawButton.addEventListener("click", actionDraw);

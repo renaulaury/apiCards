@@ -45,3 +45,35 @@ button {
 .card {
     width: 170px;
 }
+
+/*********************** Navbar *******************/
+
+#navbar ol {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+nav li {
+    list-style-type: none;
+}
+
+a {
+    color: black;
+}
+
+.navbarOther ol {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    padding: 3% 0;
+}
+
+h1 {
+    text-align: center;
+}
