@@ -127,6 +127,10 @@ function createContainPile(suit) {
 
 // Fonction pour ajouter une carte à la pile correspondante
 function addCardToDomBySuit(suit, imgUri, code) {
+    // Recherche de la div correspondant au suit
+    let pileHtmlElement = document.querySelector(`.${suit}`);
+
+
     //creation element html 'img' class css "card" et attribut html "src" : l uri sera recue en argument
     const imgCardHtmlElement = document.createElement("img");
     imgCardHtmlElement.classList.add(code);    
