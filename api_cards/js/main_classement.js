@@ -130,25 +130,10 @@ function createContainPile(suit) {
     return pileHtmlElement;
 }
 
-// Fonction pour trier les cartes dans le DOM
-function sortCardsInDom(pileHtmlElement) {
-    const cards = Array.from(pileHtmlElement.querySelectorAll(".card"));
-
-    cards.sort((a, b) => {
-        const codeA = a.classList[0];
-        const codeB = b.classList[0];
-        return getCardIndexByCode(codeA) - getCardIndexByCode(codeB);
-    });
-
-    cards.forEach((card) => pileHtmlElement.append(card));
-}
-
-
 // Fonction pour ajouter une carte à la pile correspondante
 async function addCardToDomBySuit(suit, imgUri, code) {
     // Recherche de la div correspondant au suit
     let pileHtmlElement = document.querySelector(`.${suit}`);
-
 
     // Si la div n'existe pas encore, on la crée
     if (!pileHtmlElement) {
@@ -156,30 +141,12 @@ async function addCardToDomBySuit(suit, imgUri, code) {
     }
     
     //creation element html 'img' class css "card" et attribut html "src" : l uri sera recue en argument
-    const imgCardHtmlElement = document.createElement("img");    
-    imgCardHtmlElement.classList.add(code);  
+    const imgCardHtmlElement = document.createElement("img");
+    imgCardHtmlElement.classList.add(code);    
     imgCardHtmlElement.classList.add('card');    
     imgCardHtmlElement.src = imgUri;
 
-    // Trouver la bonne position dans la pile (par rapport à l'ordre des cartes)
-    const cards = Array.from(pileHtmlElement.querySelectorAll(".card"));
-    let inserted = false;
-
-    //parcours des class presentes pour inserer la new card
-    for (let i = 0; i < cards.length; i++) {
-        const currentCardCode = cards[i].classList[0]; // Le code de la carte existante
-        if (getCardIndexByCode(code) < getCardIndexByCode(currentCardCode)) {
-            pileHtmlElement.insertBefore(imgCardHtmlElement, cards[i]);
-            inserted = true;
-            break;
-        }
-    }
-
-    //si on insere pas avant alors apres
-    if (!inserted) {
-        pileHtmlElement.append(imgCardHtmlElement); // Si ce n'est pas inséré avant, on l'ajoute à la fin
-    }
-  
+    
     // Ajout de l'image dans la pile correspondante
     pileHtmlElement.append(imgCardHtmlElement);
 
@@ -188,28 +155,48 @@ async function addCardToDomBySuit(suit, imgUri, code) {
     await callApi(uriAddToPile);
 }
 
-// Ordres des cartes
-const valueOrder = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+ 
+// Fonction pour trier les cartes par suit
+function sortBySuit() {
+    // Les suites dans l'ordre voulu : pique, coeur, trèfle, carreau
+    const suitsOrder = ['SPADES', 'HEARTS', 'CLUBS', 'DIAMONDS'];
 
-// Ordre des suits
-const suitOrder = ["H", "S", "D", "C"]; 
+    // Récupérer toutes les piles de cartes présentes dans le DOM
+    const allCards = [...document.querySelectorAll('.card')];
 
+    // Trier les cartes en fonction de leur suit
+    allCards.sort((a, b) => {
+        const suitA = a.classList[0].toUpperCase(); // Première classe = suit
+        const suitB = b.classList[0].toUpperCase(); // Première classe = suit
 
-function getCardIndexByCode(code) {
-    const valuePart = code.slice(0, -1); // Extrait la valeur (ex : "4", "A")
-    const suitPart = code.slice(-1);    // Extrait le suit (ex : "D", "H")
+        // Trouver l'index de chaque suit dans suitsOrder
+        const indexA = suitsOrder.indexOf(suitA);
+        const indexB = suitsOrder.indexOf(suitB);
 
-    const valueIndex = valueOrder.indexOf(valuePart);
-    const suitIndex = suitOrder.indexOf(suitPart);
+        // Comparer les index pour trier les cartes
+        return indexA - indexB;
+    });
 
-    return suitIndex * valueOrder.length + valueIndex;
+    // Vider les piles existantes avant de réorganiser
+    suitsOrder.forEach(suit => {
+        const pileHtmlElement = document.querySelector(`.${suit.toLowerCase()}`);
+        if (pileHtmlElement) {
+            pileHtmlElement.innerHTML = ''; // Vider la pile avant de la remplir
+        }
+    });
+
+    // Ajouter les cartes triées dans leurs piles respectives
+    allCards.forEach(card => {
+        const suit = card.classList[0].toUpperCase();
+        const pileHtmlElement = document.querySelector(`.${suit.toLowerCase()}`);
+        pileHtmlElement.appendChild(card);
+    });
 }
 
 
 
- 
 
-/*************************** Pioche ****************************/
+
 //fonction qui dde a piocher une carte puis qui fait appel pour l integrer dans le dom
 async function actionDraw() {
 
@@ -224,10 +211,10 @@ async function actionDraw() {
 
     // Le code de la carte tirée    
     const code = drawCardResponse.cards[0].code;
-    
-    
+
     // Ajout de la carte à la bonne pile
     addCardToDomBySuit(suit, imgUri, code);    
+    sortBySuit();
 }
 
 

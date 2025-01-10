@@ -33,19 +33,20 @@ button {
 
 /* Cards */
 #cards-container {
+    position: relative;
     padding: 0 30px 30px; 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 100px;
     
 }
 
 .card {
     width: 50px;
-    position: relative;
+    position: absolute;
     z-index: 1;
 }
 

@@ -120,7 +120,7 @@ const getApiEndpointAddToPile = (pileName, cardCode) =>
 
 
 //element html utiles pour les event et pour la manip du dom
-const  cardsContainer = document.getElementById("cards-container");
+const cardsContainer = document.getElementById("cards-container");
 
 //fonction créer une pile
 function createContainPile(suit) {
@@ -146,13 +146,6 @@ async function addCardToDomBySuit(suit, imgUri, code) {
     imgCardHtmlElement.classList.add('card');    
     imgCardHtmlElement.src = imgUri;
 
-    //Incrémentation index
-    const cardsInPile = pileHtmlElement.querySelectorAll('img');
-    const zIndex = cardsInPile.length + 1;
-
-    //attribution z index
-    imgCardHtmlElement.style.zIndex = zIndex;    
-
     // Ajout de l'image dans la pile correspondante
     pileHtmlElement.append(imgCardHtmlElement);
 
@@ -170,17 +163,28 @@ async function actionDraw() {
     // l appel a l api pour dder au croupier de piocher une carte et de nous la renvoyer
     const drawCardResponse = await drawCard();
 
-    //recup uri de l img de cette carte dans les données recues
-    const imgUri = drawCardResponse.cards[0].image;
+    if (drawCardResponse.cards && drawCardResponse.cards.length > 0) {
+        //recup uri de l img de cette carte dans les données recues
+        const imgUri = drawCardResponse.cards[0].image;
 
-    // Le suit de la carte tirée
-    const suit = drawCardResponse.cards[0].suit; 
+        // Le suit de la carte tirée
+        const suit = drawCardResponse.cards[0].suit; 
 
-    // Le code de la carte tirée    
-    const code = drawCardResponse.cards[0].code;
+        // Le code de la carte tirée    
+        const code = drawCardResponse.cards[0].code;
 
     // Ajout de la carte à la bonne pile
-    addCardToDomBySuit(suit, imgUri);    
+    addCardToDomBySuit(suit, imgUri, code);    
+
+    }
+     // Vérifier si le deck est vide et masquer le bouton "Draw"
+     const remainingCardsResponse = await callApi(`https://deckofcardsapi.com/api/deck/${idDeck}/remaining`);
+     const remainingCards = remainingCardsResponse.remaining;
+
+    //si solde carte = 0 alors draw = casper
+    if (remainingCards === 50) {
+        actionDrawButton.style.display = 'none'; 
+    }
 }
 
 
