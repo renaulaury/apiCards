@@ -17,13 +17,13 @@ async function callApi(uri) {
     console.log("uri = ", uri)
 
     try {
-    //fetch(), appel a l api et reception de la reponse
-    const response = await fetch(uri);
+    //appel a l api et reception de la reponse
+    const response = await axios.get(uri);
 
         if (response.ok) { //pour confirmer que le statut HTTP est dans la plage de succès (200-299)
 
-            //Récupération des données JSON recues de l api
-            const data = await response.json();
+            //Récupération des données axios recues de l api
+            const data = await response.data;
             console.log("data = ", data);
 
             console.log("-- callAPI - end --");
