@@ -35,15 +35,18 @@ button {
 #cards-container {
     padding: 0 30px 30px; 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 30px;
+    
 }
 
 .card {
-    width: 170px;
+    width: 50px;
+    position: relative;
+    z-index: 1;
 }
 
 /*********************** Navbar *******************/
