@@ -13,7 +13,6 @@
             <ol>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="exoGuide.html">Exercice guidé</a></li>
-                <li><a href="classement.html">Cartes classées</a></li>
             </ol>
         </nav>
     </header>
@@ -22,13 +21,22 @@
 
     <div id="main-container">
         <div id="actions-container">
-            <button id="action-reset">RESET</button>
-            <button id="action-draw">Draw</button>
+
+                <button id="action-reset">RESET</button>
+
+                <button id="action-draw">
+                    <div class="pioche">
+                        <!-- <img class="pioche-card" src="../img/dosCarte.jpg" alt="Pioche de carte"> -->
+                        <p class="textPioche">END</p>
+                    </div>
+                </button>
         </div>
 
         <div id="cards-container"></div>
     </div>
 
     <script src="../js/main_piles.js"></script>
+
+    <footer></footer>
 </body>
 </html>

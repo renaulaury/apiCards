@@ -17,45 +17,83 @@
 #actions-container {
     padding:50px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap:100px;
+    gap:30px;
 }
 
-button {
+.container2 {
+    display:flex;
+    flex-direction: row;
+    gap: 30px
+}
+
+#action-reset {
     border-radius: 7px;
-    padding: 20px;
-    width: 170px;
-    font-size: 2em;
+    padding: 10px;
+    width: 130px;
+    font-size: 1em;
     font-family: Calibri;
 }
 
+#action-draw {
+    all: unset;  
+}
+
+
+
+
 /* Cards */
+.pioche {
+    position: relative;
+    width:100px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.textPioche {
+    z-index: -100;
+    position: absolute;
+}
+
 #cards-container {
     position: relative;
-    padding: 0 30px 30px; 
+    padding: 0 30px; 
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 100px;
-    
+    gap: 100px;    
+}
+
+.pioche-card {
+    width: 100px;
+    height: 150px;
+    border-radius: 10px;
+    z-index: 1;
 }
 
 .card {
-    width: 50px;
+    width: 100px;
     position: absolute;
     z-index: 1;
 }
+
+.pile {
+    margin: 50px;
+}
+
 
 /*********************** Navbar *******************/
 
 #navbar ol {
     height: 100vh;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 100px;
@@ -80,4 +118,9 @@ a {
 
 h1 {
     text-align: center;
+}
+
+/* Footer */
+footer {
+    margin-top: 20%;
 }

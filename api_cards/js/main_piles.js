@@ -51,6 +51,49 @@ async function getNewDeck() {
 
 /*************** Mélange du deck ***************/
 
+
+function createPick() {
+    const pickHtmlElement = document.createElement("div");
+    pickHtmlElement.classList.add('pioche');
+
+    // Récup du parent
+    const actionsContainer = document.getElementById('actions-container');
+    
+    // Insertion
+    actionsContainer.insertBefore(pickHtmlElement, actionsContainer.firstChild);
+    return pickHtmlElement;
+}
+
+/************************* Mélange du deck ******************/
+// Fonction pour créer la pile de 52 cartes
+function createPileOfCards() {
+    // Sélectionner le conteneur parent
+    const piocheContainer = document.querySelector('.pioche');
+
+   
+    
+    // Créer les 52 cartes
+    for (let i = 0; i < 52; i++) {
+        // Créer l'élément image pour chaque carte
+        const card = document.createElement('img');
+        card.src = "../img/dosCarte.jpg"; 
+        card.alt = "Pioche de carte";
+        card.classList.add('pioche-card');
+        
+        // Appliquer le décalage pour chaque carte
+        card.style.position = 'absolute';  
+        card.style.left = `${i * 0.3}px`;  // Décalage vertical de 2px à chaque carte
+        card.style.top = `${i * 0.2}px`;  // Décalage vertical de 2px à chaque carte
+
+        // Ajouter la carte au conteneur de la pioche
+        piocheContainer.appendChild(card);
+    }
+}
+
+// Appeler la fonction pour créer la pile
+createPileOfCards();
+
+
 //on pioche
 let idDeck = null;
 
@@ -130,6 +173,7 @@ const cardsContainer = document.getElementById("cards-container");
 function createContainPile(suit) {
     const pileHtmlElement = document.createElement("div");
     pileHtmlElement.classList.add(suit);
+    pileHtmlElement.classList.add('pile');
     cardsContainer.append(pileHtmlElement);
     return pileHtmlElement;
 }
@@ -168,7 +212,6 @@ async function actionDraw() {
     const drawCardResponse = await drawCard();
 
     // if (drawCardResponse.cards && drawCardResponse.cards.length > 0) {
-    console.log("reponse-------------------------------------------------", drawCardResponse);
         //recup uri de l img de cette carte dans les données recues
         const imgUri = drawCardResponse.cards[0].image;
 

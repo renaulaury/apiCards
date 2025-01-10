@@ -19,7 +19,6 @@ async function callApi(uri) {
     try {
     //fetch(), appel a l api et reception de la reponse
     const response = await fetch(uri);
-    console.log("response = ", response);
 
         if (response.ok) { //pour confirmer que le statut HTTP est dans la plage de succès (200-299)
 
@@ -52,6 +51,18 @@ async function getNewDeck() {
 
 /*************** Mélange du deck ***************/
 
+function createPick() {
+    const pickHtmlElement = document.createElement("div");
+    pickHtmlElement.classList.add('pioche');
+
+    // Récup du parent
+    const actionsContainer = document.getElementById('actions-container');
+    
+    // Insertion
+    actionsContainer.insertBefore(pickHtmlElement, actionsContainer.firstChild);
+    return pickHtmlElement;
+}
+
 //on pioche
 let idDeck = null;
 
@@ -72,8 +83,9 @@ async function shuffleDeck() {
 //fonction fléchée qui renvoie uri dyn de dde de mélange du deck et de pioche
 const getApiEndpointDrawCard = () => `https://deckofcardsapi.com/api/deck/${idDeck}/draw/?count=1`;
 
+
 //fonction de dde de pioche dans le deck
-async function drawCard() {
+async function drawCard() {       
     return await callApi(getApiEndpointDrawCard());
 }
 
@@ -105,6 +117,10 @@ async function actionReset() {
     //recup id du new deck dans les datas recues et maj variables globale
     idDeck = newDeckResponse.deck_id;
 
+    const button = document.getElementById('action-draw');
+    button.style.display = 'block'; 
+
+     
     //melange du deck
     await shuffleDeck();
 }
@@ -120,7 +136,7 @@ const getApiEndpointAddToPile = (pileName, cardCode) =>
 
 
 //element html utiles pour les event et pour la manip du dom
-const  cardsContainer = document.getElementById("cards-container");
+const cardsContainer = document.getElementById("cards-container");
 
 //fonction créer une pile
 function createContainPile(suit) {
@@ -146,7 +162,6 @@ async function addCardToDomBySuit(suit, imgUri, code) {
     imgCardHtmlElement.classList.add('card');    
     imgCardHtmlElement.src = imgUri;
 
-    
     // Ajout de l'image dans la pile correspondante
     pileHtmlElement.append(imgCardHtmlElement);
 
@@ -156,45 +171,6 @@ async function addCardToDomBySuit(suit, imgUri, code) {
 }
 
  
-// Fonction pour trier les cartes par suit
-function sortBySuit() {
-    // Les suites dans l'ordre voulu : pique, coeur, trèfle, carreau
-    const suitsOrder = ['SPADES', 'HEARTS', 'CLUBS', 'DIAMONDS'];
-
-    // Récupérer toutes les piles de cartes présentes dans le DOM
-    const allCards = [...document.querySelectorAll('.card')];
-
-    // Trier les cartes en fonction de leur suit
-    allCards.sort((a, b) => {
-        const suitA = a.classList[0].toUpperCase(); // Première classe = suit
-        const suitB = b.classList[0].toUpperCase(); // Première classe = suit
-
-        // Trouver l'index de chaque suit dans suitsOrder
-        const indexA = suitsOrder.indexOf(suitA);
-        const indexB = suitsOrder.indexOf(suitB);
-
-        // Comparer les index pour trier les cartes
-        return indexA - indexB;
-    });
-
-    // Vider les piles existantes avant de réorganiser
-    suitsOrder.forEach(suit => {
-        const pileHtmlElement = document.querySelector(`.${suit.toLowerCase()}`);
-        if (pileHtmlElement) {
-            pileHtmlElement.innerHTML = ''; // Vider la pile avant de la remplir
-        }
-    });
-
-    // Ajouter les cartes triées dans leurs piles respectives
-    allCards.forEach(card => {
-        const suit = card.classList[0].toUpperCase();
-        const pileHtmlElement = document.querySelector(`.${suit.toLowerCase()}`);
-        pileHtmlElement.appendChild(card);
-    });
-}
-
-
-
 
 
 //fonction qui dde a piocher une carte puis qui fait appel pour l integrer dans le dom
@@ -203,19 +179,25 @@ async function actionDraw() {
     // l appel a l api pour dder au croupier de piocher une carte et de nous la renvoyer
     const drawCardResponse = await drawCard();
 
-    //recup uri de l img de cette carte dans les données recues
-    const imgUri = drawCardResponse.cards[0].image;
+    // if (drawCardResponse.cards && drawCardResponse.cards.length > 0) {
+        //recup uri de l img de cette carte dans les données recues
+        const imgUri = drawCardResponse.cards[0].image;
 
-    // Le suit de la carte tirée
-    const suit = drawCardResponse.cards[0].suit; 
+        // Le suit de la carte tirée
+        const suit = drawCardResponse.cards[0].suit; 
 
-    // Le code de la carte tirée    
-    const code = drawCardResponse.cards[0].code;
+        // Le code de la carte tirée    
+        const code = drawCardResponse.cards[0].code;
 
     // Ajout de la carte à la bonne pile
     addCardToDomBySuit(suit, imgUri, code);    
-    sortBySuit();
-}
+
+    // //si solde carte = 0 alors draw = casper
+    if (drawCardResponse.remaining === 0) {
+        actionDrawButton.style.display = 'none'; 
+    } 
+    
+    }
 
 
 
