@@ -19,7 +19,6 @@ async function callApi(uri) {
     try {
     //fetch(), appel a l api et reception de la reponse
     const response = await fetch(uri);
-    console.log("response = ", response);
 
         if (response.ok) { //pour confirmer que le statut HTTP est dans la plage de succès (200-299)
 
@@ -72,8 +71,9 @@ async function shuffleDeck() {
 //fonction fléchée qui renvoie uri dyn de dde de mélange du deck et de pioche
 const getApiEndpointDrawCard = () => `https://deckofcardsapi.com/api/deck/${idDeck}/draw/?count=1`;
 
+
 //fonction de dde de pioche dans le deck
-async function drawCard() {
+async function drawCard() {       
     return await callApi(getApiEndpointDrawCard());
 }
 
@@ -105,6 +105,10 @@ async function actionReset() {
     //recup id du new deck dans les datas recues et maj variables globale
     idDeck = newDeckResponse.deck_id;
 
+    const button = document.getElementById('action-draw');
+    button.style.display = 'block'; 
+
+     
     //melange du deck
     await shuffleDeck();
 }
@@ -163,7 +167,8 @@ async function actionDraw() {
     // l appel a l api pour dder au croupier de piocher une carte et de nous la renvoyer
     const drawCardResponse = await drawCard();
 
-    if (drawCardResponse.cards && drawCardResponse.cards.length > 0) {
+    // if (drawCardResponse.cards && drawCardResponse.cards.length > 0) {
+    console.log("reponse-------------------------------------------------", drawCardResponse);
         //recup uri de l img de cette carte dans les données recues
         const imgUri = drawCardResponse.cards[0].image;
 
@@ -176,16 +181,12 @@ async function actionDraw() {
     // Ajout de la carte à la bonne pile
     addCardToDomBySuit(suit, imgUri, code);    
 
-    }
-     // Vérifier si le deck est vide et masquer le bouton "Draw"
-     const remainingCardsResponse = await callApi(`https://deckofcardsapi.com/api/deck/${idDeck}/remaining`);
-     const remainingCards = remainingCardsResponse.remaining;
-
-    //si solde carte = 0 alors draw = casper
-    if (remainingCards === 50) {
+    // //si solde carte = 0 alors draw = casper
+    if (drawCardResponse.remaining === 0) {
         actionDrawButton.style.display = 'none'; 
+    } 
+    
     }
-}
 
 
 
