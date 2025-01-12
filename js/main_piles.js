@@ -208,6 +208,12 @@ async function addCardToDomBySuit(suit, imgUri, code) {
 //fonction qui dde a piocher une carte puis qui fait appel pour l integrer dans le dom
 async function actionDraw() {
 
+    // Désactive temporairement le bouton de pioche
+    actionDrawButton.disabled = true;
+
+    // Attend 2 secondes avant de continuer
+    await wait2sec();
+
     // l appel a l api pour dder au croupier de piocher une carte et de nous la renvoyer
     const drawCardResponse = await drawCard();
 
@@ -233,10 +239,27 @@ async function actionDraw() {
 
 
 
-/*je crée une div qui a pour class le suit soit 4 au total -> createContainPile */
-/*je pioche (actionDraw), si le suit de la carte a une div avec le meme suit alors elle est ajoutée a la pile -> (addCardToDomBySuit)*/
-/*sinon création d'une div avec son suit puis ajout a cette pile*/
+/*********************** Délai de pioche **************/
+//Stockage timer du moment (ms)
+const timerStart = new Date().getTime();
 
+//Renvoie string en ms ecoulées depuis timerStart
+function getCurrMs() {
+    return `[${new Date().getTime() - timerStart} ms]`;
+};
+
+//fonction qui attend 2sec avt succes
+async function wait2sec() {
+    console.log(getCurrentMs() + "wait2sec - start"); // timer du début
+
+    return new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log(getCurrMs() + "wait2sec - end"); // timer pendant
+        resolve("ok"); 
+    }, 2000);
+});
+}
+ 
 
 
 
